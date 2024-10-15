@@ -9,3 +9,4 @@ public class JavaNinja {
         cli.start();
     }
 }
+

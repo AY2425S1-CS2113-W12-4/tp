@@ -1,19 +1,22 @@
 package seedu.javaninja;
 
+import seedu.javaninja.Storage.Storage;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class QuizManager {
     private List<Topic> topics;
     private Quiz currentQuiz;
-    private QuizManager quizManager;
     private List<String> pastResults;
+    private Storage storage; // Use Storage for saving and loading results
 
     public QuizManager() {
         this.topics = new ArrayList<>();
         this.pastResults = new ArrayList<>();
+        this.storage = new Storage("data/results.txt"); // Define the file path for results
         loadTopics();
+        loadResultsFromFile(); // Load results at the start
     }
 
     private void loadTopics() {
@@ -21,7 +24,7 @@ public class QuizManager {
         loopsTopic.addQuestion(new Mcq(
                 "Which of the following is a loop structure in Java?",
                 "b",
-                Arrays.asList("a) if-else", "b) for", "c) switch", "d) try-catch")));
+                List.of("a) if-else", "b) for", "c) switch", "d) try-catch")));
         topics.add(loopsTopic);
     }
 
@@ -41,6 +44,7 @@ public class QuizManager {
         int score = currentQuiz.getScore();
         String comment = generateComment(score);
         addPastResult(score, comment);
+        saveResultsToFile();  // Save results after the quiz
     }
 
     public void printTopics() {
@@ -83,9 +87,9 @@ public class QuizManager {
         }
     }
 
-    // Method to review past results
+    // Review past results
     public String getPastResults() {
-        if (pastResults == null || pastResults.isEmpty()) {
+        if (pastResults.isEmpty()) {
             return "No past results available. You haven't completed any quizzes yet.";
         }
 
@@ -94,5 +98,23 @@ public class QuizManager {
             results.append(result).append("\n");
         }
         return results.toString();
+    }
+
+    // Save the past results to file
+    private void saveResultsToFile() {
+        try {
+            storage.saveResults(pastResults);
+        } catch (IOException e) {
+            System.out.println("Error saving results to file.");
+        }
+    }
+
+    // Load past results from file
+    private void loadResultsFromFile() {
+        try {
+            pastResults = storage.loadResults();
+        } catch (IOException e) {
+            System.out.println("No past results found.");
+        }
     }
 }
