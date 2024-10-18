@@ -81,9 +81,9 @@ public class QuizManager {
                 options.add(parts[i]);
             }
             topic.addQuestion(new Mcq(questionText, correctAnswer, options));
-                break;
-            default:
-                logger.warning("Invalid question type: " + questionType);
+            break;
+        default:
+            logger.warning("Invalid question type: " + questionType);
         }
     }
 
