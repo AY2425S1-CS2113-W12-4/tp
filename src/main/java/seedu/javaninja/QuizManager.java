@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
 public class QuizManager {
@@ -33,6 +34,19 @@ public class QuizManager {
             }
         } catch (IOException e) {
             logger.severe("Error reading file: " + e.getMessage());
+        } catch (NoSuchElementException e) {
+
+            File directory = new File("./data");
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+            File newFile = new File("./data/Questions.txt");
+            try {
+                newFile.createNewFile();
+                logger.info("Created new file: Questions.txt");
+            } catch (IOException ioException) {
+                logger.severe("Error creating new file: " + ioException.getMessage());
+            }
         }
     }
 
