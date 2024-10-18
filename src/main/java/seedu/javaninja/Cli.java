@@ -30,8 +30,12 @@ public class Cli {
                 break;
             case "select":
                 System.out.println("Enter topic name: ");
-                String topicName = scanner.nextLine();
-                quizManager.selectTopic(topicName);
+                if (scanner.hasNextLine()) {
+                    String topicName = scanner.nextLine();
+                    quizManager.selectTopic(topicName);
+                } else {
+                    System.out.println("Input error, file has no contents.");
+                }
                 break;
             case "review":
                 System.out.println("Reviewing your past results:");
