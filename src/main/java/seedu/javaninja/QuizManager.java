@@ -27,6 +27,22 @@ public class QuizManager {
 
     private void loadTopicsFromFile() {
         File file = new File(FILE_PATH);
+
+        // Check if the file exists, if not, create it
+        if (!file.exists()) {
+            File directory = new File("./data");
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+            try {
+                file.createNewFile();
+                logger.info("Created new file: Questions.txt");
+            } catch (IOException e) {
+                logger.severe("Error creating new file: " + e.getMessage());
+            }
+        }
+
+        // Now try to read the file
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -34,19 +50,6 @@ public class QuizManager {
             }
         } catch (IOException e) {
             logger.severe("Error reading file: " + e.getMessage());
-        } catch (NoSuchElementException e) {
-
-            File directory = new File("./data");
-            if (!directory.exists()) {
-                directory.mkdirs();
-            }
-            File newFile = new File("./data/Questions.txt");
-            try {
-                newFile.createNewFile();
-                logger.info("Created new file: Questions.txt");
-            } catch (IOException ioException) {
-                logger.severe("Error creating new file: " + ioException.getMessage());
-            }
         }
     }
 
