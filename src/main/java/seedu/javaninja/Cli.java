@@ -19,8 +19,11 @@ public class Cli {
         System.out.println("'quit' to exit the programme");
         Scanner scanner = new Scanner(System.in);
 
-        String input = scanner.nextLine();
-        while (!input.equalsIgnoreCase("quit")) {
+        while (scanner.hasNextLine()) {
+            String input = scanner.nextLine();
+            if (input.equalsIgnoreCase("quit")) {
+                break;
+            }
             switch (input.toLowerCase()) {
             case "view":
                 quizManager.printTopics();
