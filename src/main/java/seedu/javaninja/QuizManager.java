@@ -20,32 +20,32 @@ public class QuizManager {
         this.topics = new ArrayList<>();
         this.pastResults = new ArrayList<>();
         this.storage = new Storage("data/results.txt");
-        loadTopicsFromFile();
-        loadResultsFromFile();
+        try {
+            loadTopicsFromFile();
+            loadResultsFromFile();
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 
-    private void loadTopicsFromFile() {
+    private void loadTopicsFromFile() throws IOException {
         File file = new File(FILE_PATH);
 
-        // Check if the file exists, if not, create it
         if (!file.exists()) {
             File directory = new File("./data");
             if (!directory.exists()) {
                 directory.mkdirs();
             }
-            try {
-                file.createNewFile();
-                logger.info("Created new file: Questions.txt");
-            } catch (IOException e) {
-                logger.severe("Error creating new file: " + e.getMessage());
-            }
+            file.createNewFile();
+            logger.info("Created new file: Questions.txt");
         }
 
-        // Now try to read the file
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
-                parseTopic(line);
+                if (!line.trim().isEmpty()) {  // Skip empty lines
+                    parseTopic(line);
+                }
             }
         } catch (IOException e) {
             logger.severe("Error reading file: " + e.getMessage());
@@ -75,15 +75,15 @@ public class QuizManager {
 
         Topic topic = getOrCreateTopic(topicName);
         switch (questionType) {
-        case "Mcq":
-            List<String> options = new ArrayList<>();
-            for (int i = 4; i < parts.length; i++) {
-                options.add(parts[i]);
-            }
-            topic.addQuestion(new Mcq(questionText, correctAnswer, options));
-            break;
-        default:
-            logger.warning("Invalid question type: " + questionType);
+            case "Mcq":
+                List<String> options = new ArrayList<>();
+                for (int i = 4; i < parts.length; i++) {
+                    options.add(parts[i]);
+                }
+                topic.addQuestion(new Mcq(questionText, correctAnswer, options));
+                break;
+            default:
+                logger.warning("Invalid question type: " + questionType);
         }
     }
 
