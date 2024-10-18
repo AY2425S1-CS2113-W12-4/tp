@@ -19,16 +19,23 @@ public class Cli {
         System.out.println("'quit' to exit the programme");
         Scanner scanner = new Scanner(System.in);
 
-        String input = scanner.nextLine();
-        while (!input.equalsIgnoreCase("quit")) {
+        while (scanner.hasNextLine()) {
+            String input = scanner.nextLine();
+            if (input.equalsIgnoreCase("quit")) {
+                break;
+            }
             switch (input.toLowerCase()) {
             case "view":
                 quizManager.printTopics();
                 break;
             case "select":
                 System.out.println("Enter topic name: ");
-                String topicName = scanner.nextLine();
-                quizManager.selectTopic(topicName);
+                if (scanner.hasNextLine()) {
+                    String topicName = scanner.nextLine();
+                    quizManager.selectTopic(topicName);
+                } else {
+                    System.out.println("Input error, file has no contents.");
+                }
                 break;
             case "review":
                 System.out.println("Reviewing your past results:");

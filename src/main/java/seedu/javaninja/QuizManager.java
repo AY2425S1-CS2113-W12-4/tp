@@ -20,16 +20,32 @@ public class QuizManager {
         this.topics = new ArrayList<>();
         this.pastResults = new ArrayList<>();
         this.storage = new Storage("data/results.txt");
-        loadTopicsFromFile();
-        loadResultsFromFile();
+        try {
+            loadTopicsFromFile();
+            loadResultsFromFile();
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 
-    private void loadTopicsFromFile() {
+    private void loadTopicsFromFile() throws IOException {
         File file = new File(FILE_PATH);
+
+        if (!file.exists()) {
+            File directory = new File("./data");
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+            file.createNewFile();
+            logger.info("Created new file: Questions.txt");
+        }
+
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
-                parseTopic(line);
+                if (!line.trim().isEmpty()) {  // Skip empty lines
+                    parseTopic(line);
+                }
             }
         } catch (IOException e) {
             logger.severe("Error reading file: " + e.getMessage());
