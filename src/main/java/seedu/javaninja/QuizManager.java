@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
 public class QuizManager {
