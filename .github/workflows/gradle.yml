@@ -30,6 +30,9 @@ jobs:
           java-version: '17'
           java-package: jdk+fx
 
+      - name: Install dos2unix
+        run: sudo apt-get install dos2unix
+
       - name: Build and check with Gradle
         run: ./gradlew check
 
