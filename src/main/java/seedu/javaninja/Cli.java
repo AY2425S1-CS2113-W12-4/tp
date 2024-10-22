@@ -1,6 +1,7 @@
 package seedu.javaninja;
 
 import java.io.IOException;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 /* Manages input by user */
@@ -21,38 +22,48 @@ public class Cli {
         System.out.println("'help' for a list of commands");
         System.out.println("'quit' to exit the program");
 
-        while (true) {
-            System.out.print("> ");
-            String input = scanner.nextLine().trim();
-            String command = processCommand(input);
+        try {
+            while (true) {
+                System.out.print("> ");
+                if (!scanner.hasNextLine()) {
+                    System.out.println("No input detected. Exiting.");
+                    break;
+                }
 
-            if (command.equals("quit")) {
-                break;
-            }
+                String input = scanner.nextLine().trim();
+                String command = processCommand(input);
 
-            switch (command) {
-            case "view":
-                quizManager.printTopics();
-                break;
-            case "select":
-                selectTopic(input);
-                break;
-            case "review":
-                System.out.println("Reviewing your past results:");
-                System.out.println(quizManager.getPastResults());
-                break;
-            case "help":
-                printHelp();
-                break;
-            case "add":
-                quizManager.addQuestionByUser(input);
-                break;
-            default:
-                System.out.println("Invalid input. Type 'help' for a list of commands.");
+                if (command.equals("quit")) {
+                    break;
+                }
+
+                switch (command) {
+                case "view":
+                    quizManager.printTopics();
+                    break;
+                case "select":
+                    selectTopic(input);
+                    break;
+                case "review":
+                    System.out.println("Reviewing your past results:");
+                    System.out.println(quizManager.getPastResults());
+                    break;
+                case "help":
+                    printHelp();
+                    break;
+                case "add":
+                    quizManager.addQuestionByUser(input);
+                    break;
+                default:
+                    System.out.println("Invalid input. Type 'help' for a list of commands.");
+                }
             }
+        } catch (NoSuchElementException e) {
+            System.out.println("Error: No input found. Exiting.");
+        } finally {
+            System.out.println("Goodbye!");
+            scanner.close();
         }
-        System.out.println("Goodbye!");
-        scanner.close();
     }
 
     private void selectTopic(String input) {

@@ -1,1 +1,3 @@
 select Loops
+a
+quit
